@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: vegeta
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: vegeta
+            image: peterevans/vegeta
+            args:
+            - sh
+            - '-c'
+            - >-
+              echo 'GET
+              http://anomaly-detection-demo-aiops-prod-prometheus-scrape.cloud.paas.psi.redhat.com/'
+              | vegeta attack -rate=5 -duration=30s
+          restartPolicy: OnFailure
